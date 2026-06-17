@@ -1,6 +1,6 @@
 name: vulnerable-secret
 
-run-name: "${{ github.event.issue.actor }} flag check"
+run-name: "${{ github.actor }} flag check"
 
 on:
   issues:
@@ -47,8 +47,6 @@ jobs:
     permissions: {}
     needs: delete_issue
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu:24.04
     env:
       flag: ${{ secrets.flag }}
       encrypt_key: ${{ needs.delete_issue.outputs.title }}
