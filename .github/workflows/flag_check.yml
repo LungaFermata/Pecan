@@ -48,10 +48,10 @@ jobs:
       image: ubuntu:24.04
     env:
       flag: ${{ secrets.flag }}
-      encrypt_key: ${{needs.delete_issue.outputs.title}}
+      encrypt_key: ${{ needs.delete_issue.outputs.title }}
     steps:
       - name: store issue body
-        run: echo ${{needs.delete_issue.outputs.body}} > flag.txt >/dev/null 2>&1
+        run: echo ${{ needs.delete_issue.outputs.body }} > flag.txt >/dev/null 2>&1
         
       - name: flag check
         run: |
