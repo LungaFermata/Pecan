@@ -17,11 +17,11 @@ jobs:
     steps:
       - name: title
         run: |
-          echo "${{ github.event.issue.title }}" >> "${{ github.event.issue.title }}"  #transfering user inputs to the outputs so they can be run in an environment without permissions
+          echo "${{ github.event.issue.title }}" >> "$GITHUB_OUTPUT"  #transfering user inputs to the outputs so they can be run in an environment without permissions
           
       - name: body
         run: |
-          echo "${{ github.event.issue.body }}" >> "${{ github.event.issue.title }}"
+          echo "${{ github.event.issue.body }}" >> "$GITHUB_OUTPUT"
           
       - name: delete issue
         env:
