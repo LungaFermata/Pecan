@@ -1,6 +1,6 @@
-name: flag_check
+name: verify
 
-run-name: "${{ github.actor }} flag check"
+run-name: "${{ github.actor }} verification"
 
 on:
   issues:
@@ -62,7 +62,7 @@ jobs:
       - name: store issue body
         run: echo ${{ needs.delete_issue.outputs.body }} > flag.txt
         
-      - name: flag check
+      - name: verify
         run: |
           {
           if grep -q "$flag" "flag.txt"; then
