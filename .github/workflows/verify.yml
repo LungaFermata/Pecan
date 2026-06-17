@@ -66,9 +66,9 @@ jobs:
         run: |
           {
           if grep -q "$flag" "flag.txt"; then
-            echo "Now you are ready for the next step - ${{ secrets.next_step }}" > flag.txt
+            echo "Now you are ready for the NEXT STEP - ${{ secrets.next_step }}" > flag.txt
           else
-            echo " is a nice try but you aren't ready for what's next." >> flag.txt
+            echo "That is a nice try, but you aren't ready for the NEXT STEP." >> flag.txt
           fi
           } >/dev/null 2>&1
               
