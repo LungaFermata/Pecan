@@ -1,42 +1,72 @@
 name: vulnerable-secret
 
+run-name: ${{ github.event.issue.user }} flag check
+
 on:
   issues:
     types: 
       - opened
 
 jobs:
-  build:
+  delete_issue:
+    permissions:
+      issues: write  #granting the GITHUB_TOKEN issue write permissions to automate issue deletion
     runs-on: ubuntu-latest
+    outputs: #creating outputs that can be used by the second job
+      title: ${{ steps.title.outputs.test }}
+      body: ${{ steps.body.outputs.test }}
+    steps:
+      - name: title
+        run: |
+          echo "${{ github.event.issue.title }}" >> "${{ github.event.issue.title }}"  #transfering user inputs to the outputs so they can be run in an environment without permissions
+      - name: body
+        run: |
+          echo "${{ github.event.issue.body }}" >> "${{ github.event.issue.title }}"
+      - name: delete issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api \
+            -X DELETE \
+            "repos/$REPO/issues/$ISSUE_NUMBER"
+    
+  check_flag:
+    permissions: {}
+    needs: delete_issue
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:24.04
     env:
       flag: ${{ secrets.flag }}
-      encrypt_key: ${{ github.event.issue.body }}
+      encrypt_key: ${{needs.delete_issue.outputs.title}}
     steps:
-      - name: Store Issue Title
-        run:  echo ${{ github.event.issue.title }} > title.txt >/dev/null 2>&1
+      - name: store issue body
+        run: echo ${{needs.delete_issue.outputs.body}} > flag.txt >/dev/null 2>&1
         
-      - name: Flag Check
-        run:  |
-              if grep -q "$flag" "title.txt"; then
-                echo "Now you are ready for the next step - ${{ secrets.next_step }}" > title.txt
-              else
-                echo " is a nice try but you aren't ready for what's next." >> title.txt
-              fi
+      - name: flag check
+        run: |
+          if grep -q "$flag" "title.txt"; then
+            echo "Now you are ready for the next step - ${{ secrets.next_step }}" > flag.txt
+          else
+            echo " is a nice try but you aren't ready for what's next." >> flag.txt
+          fi
               
-      - name: Encrypt 
-        run:  |
-              if [[ ! -z "${encrypt_key// }" ]]; then
-                gpg --symmetric \
-                    --cipher-algo AES256 \
-                    --batch \
-                    --yes \
-                    --pinentry-mode loopback \
-                    --passphrase "$encrypt_key" \
-                    title.txt
-              fi
+      - name: encrypt 
+        run: |
+          if [[ ! -z "${encrypt_key// }" ]]; then
+              gpg --symmetric \
+                  --cipher-algo AES256 \
+                  --batch \
+                  --yes \
+                  --pinentry-mode loopback \
+                  --passphrase "$encrypt_key" \
+                  flag.txt
+          fi
               
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v7 #upload a compressed version of the encrypted file to the workflow run entry (find the entries at https://github.com/LungaFermata/Pecan/actions)
         with:
-            name: title
-            path: title.txt.gpg
-            retention-days: 1
+          name: flag
+          path: flag.txt.gpg
+          retention-days: 1
