@@ -11,7 +11,7 @@ jobs:
   delete_issue:
     permissions: write-all
     runs-on: ubuntu-latest
-    outputs:
+    outputs:  #sending nessicary information to the check_flag job
       title: ${{ steps.title.outputs.title }}
       body: ${{ steps.body.outputs.body }}
     env:
