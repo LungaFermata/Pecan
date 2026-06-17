@@ -33,7 +33,7 @@ jobs:
                     --pinentry-mode loopback \
                     --passphrase "$encrypt_key" \
                     title.txt
-               fi
+              fi
               
       - uses: actions/upload-artifact@v7
         with:
