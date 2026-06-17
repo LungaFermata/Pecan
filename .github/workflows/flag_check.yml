@@ -24,7 +24,8 @@ jobs:
               fi
               
       - name: encrypt 
-        run:  gpg --symmetric \
+        run:  |
+              gpg --symmetric \
                   --cipher-algo AES256 \
                   --batch \
                   --yes \
