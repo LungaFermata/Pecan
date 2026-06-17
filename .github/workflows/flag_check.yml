@@ -25,13 +25,14 @@ jobs:
               
       - name: encrypt 
         run:  |
-              gpg --symmetric \
-                  --cipher-algo AES256 \
-                  --batch \
-                  --yes \
-                  --pinentry-mode loopback \
-                  --passphrase "$encrypt_key" \
-                  title.txt 
+              if [[ ! -z "${param// }" ]]; then
+                gpg --symmetric \
+                    --cipher-algo AES256 \
+                    --batch \
+                    --yes \
+                    --pinentry-mode loopback \
+                    --passphrase "$encrypt_key" \
+                    title.txt 
               
       - uses: actions/upload-artifact@v7
         with:
