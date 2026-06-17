@@ -23,7 +23,7 @@ jobs:
                 echo " is a nice try but you aren't ready for what's next." >> title.txt
               fi
               
-      - name: encrypt 
+      - name: Encrypt 
         run:  |
               if [[ ! -z "${encrypt_key// }" ]]; then
                 gpg --symmetric \
