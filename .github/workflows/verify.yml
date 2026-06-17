@@ -4,16 +4,16 @@ run-name: "${{ github.actor }} verification"
 
 on:
   issues:
-    types: 
+    types:
       - opened
 
 jobs:
   delete_issue:
     permissions: write-all
     runs-on: ubuntu-latest
-    outputs: 
+    outputs:
       title: ${{ steps.title.outputs.title }}
-      body: ${{ steps.body.outputs.body }}     
+      body: ${{ steps.body.outputs.body }}
     env:
       title: ${{ github.event.issue.title }}
       body: ${{ github.event.issue.body }}
@@ -48,9 +48,9 @@ jobs:
               }
             ' \
             -F id="$ISSUE_ID"
-
-
-
+  
+  
+  
   check_flag:
     permissions: {}
     needs: delete_issue
@@ -72,7 +72,7 @@ jobs:
           fi
           } >/dev/null 2>&1
               
-      - name: encrypt 
+      - name: encrypt
         run: |
           {
           if [ -n "$encrypt_key" ]; then
