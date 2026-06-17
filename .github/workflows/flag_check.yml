@@ -63,7 +63,7 @@ jobs:
               
       - name: encrypt 
         run: |
-          if [[ -n "${encrypt_key//[[:space:]]/}" ]]; then
+          if [ -n "$encrypt_key" ]; then
               gpg --symmetric \
                   --cipher-algo AES256 \
                   --batch \
