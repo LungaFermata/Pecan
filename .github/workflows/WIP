@@ -1,4 +1,4 @@
-name: verify
+##name: verify
 
 run-name: "${{ github.actor }} verification"
 
